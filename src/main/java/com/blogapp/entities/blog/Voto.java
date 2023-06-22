@@ -17,14 +17,14 @@ public class Voto {
     private Long id;
     @ManyToOne
     private Utente utente;
-    @ManyToMany
-    private List<Articolo> articoli;
+    @ManyToOne
+    private Articolo articolo;
     @Column(unique = true)
     private Boolean voto;
 
-    public Voto(Utente utente, List<Articolo> articoli, Boolean voto) {
+    public Voto(Utente utente, Articolo articolo, Boolean voto) {
         this.utente = utente;
-        this.articoli = articoli;
+        this.articolo = articolo;
         this.voto = voto;
     }
 }

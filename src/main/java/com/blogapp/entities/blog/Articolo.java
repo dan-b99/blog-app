@@ -29,7 +29,7 @@ public class Articolo {
     private Set<Categoria> categorie;
     @OneToMany(mappedBy = "articolo")
     private List<Commento> commenti;
-    @ManyToMany(mappedBy = "articoli")
+    @OneToMany(mappedBy = "articolo")
     private List<Voto> voti = new ArrayList<>();
 
 
