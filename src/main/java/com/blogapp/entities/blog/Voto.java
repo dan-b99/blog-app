@@ -5,18 +5,22 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "UN_voto", columnNames = {"utente", "articolo"})
+})
 public class Voto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     @ManyToOne
     private Utente utente;
+    @Column(unique = true)
     @ManyToOne
     private Articolo articolo;
     @Column(unique = true)
