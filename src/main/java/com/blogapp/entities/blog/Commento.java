@@ -20,4 +20,10 @@ public class Commento {
     private Utente autore;
     @ManyToOne
     private Articolo articolo;
+
+    public Commento(String testo, Utente autore, Articolo articolo) {
+        this.testo = testo;
+        this.autore = autore;
+        this.articolo = articolo;
+    }
 }

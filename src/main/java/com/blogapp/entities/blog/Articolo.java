@@ -28,9 +28,15 @@ public class Articolo {
     @ManyToMany
     private Set<Categoria> categorie;
     @OneToMany(mappedBy = "articolo")
-    private List<Commento> commenti;
+    private List<Commento> commenti = new ArrayList<>();
     @OneToMany(mappedBy = "articolo")
     private List<Voto> voti = new ArrayList<>();
 
-
+    public Articolo(String titolo, String contenuto, Set<String> tags, Utente utente, Set<Categoria> categorie) {
+        this.titolo = titolo;
+        this.contenuto = contenuto;
+        this.tags = tags;
+        this.utente = utente;
+        this.categorie = categorie;
+    }
 }
