@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +23,8 @@ public class Articolo {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String contenuto;
     @Column(nullable = false)
-    private Set<String> tags;
+    @ManyToMany(mappedBy = "articoli")
+    private Set<Tag> tags = new HashSet<>();
     @JoinColumn(name = "utente_id")
     @ManyToOne
     private Utente utente;
@@ -33,10 +35,9 @@ public class Articolo {
     @OneToMany(mappedBy = "articolo")
     private List<Voto> voti = new ArrayList<>();
 
-    public Articolo(String titolo, String contenuto, Set<String> tags, Utente utente, Set<Categoria> categorie) {
+    public Articolo(String titolo, String contenuto, Utente utente, Set<Categoria> categorie) {
         this.titolo = titolo;
         this.contenuto = contenuto;
-        this.tags = tags;
         this.utente = utente;
         this.categorie = categorie;
     }
