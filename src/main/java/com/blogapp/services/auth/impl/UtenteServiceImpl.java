@@ -8,7 +8,7 @@ import com.blogapp.entities.auth.Ruolo;
 import com.blogapp.entities.auth.Utente;
 import com.blogapp.repositories.auth.RuoloRepository;
 import com.blogapp.repositories.auth.UtenteRepository;
-import com.blogapp.services.auth.UserService;
+import com.blogapp.services.auth.UtenteService;
 import com.blogapp.util.JWTUtil;
 import com.blogapp.util.PasswordUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +22,7 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
-public class UtenteServiceImpl implements UserService {
+public class UtenteServiceImpl implements UtenteService {
 
     private final UtenteRepository utenteRepository;
     private final RuoloRepository ruoloRepository;

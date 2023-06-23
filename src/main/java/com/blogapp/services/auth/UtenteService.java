@@ -5,7 +5,7 @@ import com.blogapp.dtos.auth.LoginDTO;
 import com.blogapp.dtos.auth.RegistrazioneDTO;
 import com.blogapp.dtos.auth.UtenteOutputDTO;
 
-public interface UserService {
+public interface UtenteService {
     UtenteOutputDTO registrazione(RegistrazioneDTO registrazioneDTO);
     AutenticazioneDTO login(LoginDTO loginDTO);
 }
