@@ -16,8 +16,10 @@ public class Commento {
     private Long id;
     @Column(nullable = false)
     private String testo;
+    @JoinColumn(name = "autore_id")
     @ManyToOne
     private Utente autore;
+    @JoinColumn(name = "articolo_id")
     @ManyToOne
     private Articolo articolo;
 

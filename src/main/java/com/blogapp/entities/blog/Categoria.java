@@ -19,4 +19,8 @@ public class Categoria {
     private String nome;
     @ManyToMany(mappedBy = "categorie")
     private List<Articolo> articoli = new ArrayList<>();
+
+    public Categoria(String nome) {
+        this.nome = nome;
+    }
 }

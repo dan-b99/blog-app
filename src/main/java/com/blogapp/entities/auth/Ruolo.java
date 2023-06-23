@@ -19,7 +19,7 @@ public class Ruolo implements GrantedAuthority {
     @Column(nullable = false, unique = true)
     private String authority;
     @ManyToMany(mappedBy = "ruoli")
-    private Set<Utente> utentes = new HashSet<>();
+    private Set<Utente> utenti = new HashSet<>();
 
     public Ruolo(String authority) {
         this.authority = authority;

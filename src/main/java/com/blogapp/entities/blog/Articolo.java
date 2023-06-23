@@ -23,6 +23,7 @@ public class Articolo {
     private String contenuto;
     @Column(nullable = false)
     private Set<String> tags;
+    @JoinColumn(name = "utente_id")
     @ManyToOne
     private Utente utente;
     @ManyToMany

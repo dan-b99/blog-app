@@ -11,16 +11,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = "UN_voto", columnNames = {"utente", "articolo"})
+        @UniqueConstraint(name = "UN_voto", columnNames = {"utente_id", "articolo_id"})
 })
 public class Voto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true)
+    @JoinColumn(name = "utente_id", unique = true)
     @ManyToOne
     private Utente utente;
-    @Column(unique = true)
+    @JoinColumn(name = "articolo_id", unique = true)
     @ManyToOne
     private Articolo articolo;
     @Column(unique = true)
