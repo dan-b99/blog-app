@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import java.io.IOException;
 import java.security.SecureRandom;
 
@@ -29,12 +30,19 @@ public class ApplicationConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JWTUtil jwtUtil, ObjectMapper objectMapper, UtenteRepository utenteRepository) throws Exception {
         httpSecurity.csrf(csrfConfigurer -> csrfConfigurer.disable());
-        httpSecurity.cors(corsConfigurer -> corsConfigurer.disable());
+        httpSecurity.cors(corsConfigurer -> corsConfigurer.configurationSource(request -> {
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.addAllowedOrigin("http://localhost:4200/");
+            configuration.addAllowedMethod("*");
+            configuration.addAllowedHeader("*");
+            return configuration;
+        }));
         httpSecurity.sessionManagement(sessionManagementConfigurer ->
            sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
         httpSecurity.authorizeHttpRequests(requestMatcherRegistry -> {
-           requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/**").permitAll();
+           requestMatcherRegistry.requestMatchers("/error").permitAll();
+           requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
         });
         httpSecurity.addFilterBefore(new Filter() {
             @Override

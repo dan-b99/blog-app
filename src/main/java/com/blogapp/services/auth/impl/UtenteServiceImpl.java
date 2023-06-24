@@ -33,6 +33,12 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public UtenteOutputDTO registrazione(RegistrazioneDTO registrazioneDTO) {
+        utenteRepository.findByEmail(registrazioneDTO.getEmail()).ifPresent(u -> {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email già registrata");
+        });
+        utenteRepository.findByUsername(registrazioneDTO.getUsername()).ifPresent(u -> {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username già in uso");
+        });
         Utente utente = modelMapper.map(registrazioneDTO, Utente.class);
         utente.setPassword(passwordUtil.crypt(registrazioneDTO.getPassword()));
         utente.setRuoli(Set.of(

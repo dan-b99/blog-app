@@ -4,6 +4,7 @@ import com.blogapp.entities.blog.Articolo;
 import com.blogapp.entities.blog.Commento;
 import com.blogapp.entities.blog.Voto;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@Transactional
 @Entity
 public class Utente {
     @Id
