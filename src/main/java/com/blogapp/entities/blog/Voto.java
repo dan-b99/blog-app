@@ -17,10 +17,10 @@ public class Voto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JoinColumn(name = "utente_id", unique = true)
+    @JoinColumn(name = "utente_id")
     @ManyToOne
     private Utente utente;
-    @JoinColumn(name = "articolo_id", unique = true)
+    @JoinColumn(name = "articolo_id")
     @ManyToOne
     private Articolo articolo;
     @Column(unique = true)
