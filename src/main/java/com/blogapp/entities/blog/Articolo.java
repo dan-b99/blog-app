@@ -34,6 +34,7 @@ public class Articolo {
     private List<Commento> commenti = new ArrayList<>();
     @OneToMany(mappedBy = "articolo")
     private List<Voto> voti = new ArrayList<>();
+    private boolean approvato;
 
     public Articolo(String titolo, String contenuto, Utente utente, Set<Categoria> categorie) {
         this.titolo = titolo;
