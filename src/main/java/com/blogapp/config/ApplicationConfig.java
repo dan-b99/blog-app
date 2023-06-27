@@ -45,6 +45,8 @@ public class ApplicationConfig {
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
            requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/articles/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/articles/**").authenticated();
+           requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/categories/**").authenticated();
+           requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/categories/**").hasRole("ADMIN");
         });
         httpSecurity.addFilterBefore(new Filter() {
             @Override

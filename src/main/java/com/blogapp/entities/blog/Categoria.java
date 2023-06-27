@@ -1,6 +1,7 @@
 package com.blogapp.entities.blog;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
+@Transactional
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
