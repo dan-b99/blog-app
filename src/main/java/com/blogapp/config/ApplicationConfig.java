@@ -43,6 +43,8 @@ public class ApplicationConfig {
         httpSecurity.authorizeHttpRequests(requestMatcherRegistry -> {
            requestMatcherRegistry.requestMatchers("/error").permitAll();
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
+           requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/articles/**").authenticated();
+           requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/articles/**").authenticated();
         });
         httpSecurity.addFilterBefore(new Filter() {
             @Override

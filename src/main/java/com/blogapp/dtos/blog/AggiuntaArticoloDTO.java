@@ -15,7 +15,6 @@ public class AggiuntaArticoloDTO {
 
     private String titolo;
     private String contenuto;
-    private Long utente;
     private Set<AggiuntaTagDTO> tags = new HashSet<>();
-    private Set<AggiuntaCategoriaDTO> categorie;
+    private Set<Long> categorie;
 }
