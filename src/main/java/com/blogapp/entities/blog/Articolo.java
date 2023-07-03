@@ -2,6 +2,7 @@ package com.blogapp.entities.blog;
 
 import com.blogapp.entities.auth.Utente;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@Transactional
 @Entity
 public class Articolo {
     @Id

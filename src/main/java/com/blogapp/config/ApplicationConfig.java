@@ -46,6 +46,7 @@ public class ApplicationConfig {
            requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/users/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/articles/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/articles/**").authenticated();
+           requestMatcherRegistry.requestMatchers(HttpMethod.PUT, "/articles/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/categories/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/categories/**").hasRole("ADMIN");
         });
