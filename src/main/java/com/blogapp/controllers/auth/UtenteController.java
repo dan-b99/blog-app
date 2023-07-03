@@ -1,17 +1,12 @@
 package com.blogapp.controllers.auth;
 
-import com.blogapp.dtos.auth.AutenticazioneDTO;
-import com.blogapp.dtos.auth.LoginDTO;
-import com.blogapp.dtos.auth.RegistrazioneDTO;
-import com.blogapp.dtos.auth.UtenteOutputDTO;
+import com.blogapp.dtos.auth.*;
 import com.blogapp.services.auth.UtenteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,5 +22,9 @@ public class UtenteController {
     @PostMapping("/login")
     public ResponseEntity<AutenticazioneDTO> accesso(@RequestBody LoginDTO loginDTO) {
         return new ResponseEntity<>(utenteService.login(loginDTO), HttpStatus.OK);
+    }
+    @GetMapping("/user-roles")
+    public ResponseEntity<Set<RuoloOutputDTO>> ruoliUtente() {
+        return new ResponseEntity<>(utenteService.userRoles(), HttpStatus.OK);
     }
 }

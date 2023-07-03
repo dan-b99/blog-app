@@ -1,11 +1,11 @@
 package com.blogapp.services.auth;
 
-import com.blogapp.dtos.auth.AutenticazioneDTO;
-import com.blogapp.dtos.auth.LoginDTO;
-import com.blogapp.dtos.auth.RegistrazioneDTO;
-import com.blogapp.dtos.auth.UtenteOutputDTO;
+import com.blogapp.dtos.auth.*;
+
+import java.util.Set;
 
 public interface UtenteService {
     UtenteOutputDTO registrazione(RegistrazioneDTO registrazioneDTO);
     AutenticazioneDTO login(LoginDTO loginDTO);
+    Set<RuoloOutputDTO> userRoles();
 }

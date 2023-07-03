@@ -1,9 +1,6 @@
 package com.blogapp.services.auth.impl;
 
-import com.blogapp.dtos.auth.AutenticazioneDTO;
-import com.blogapp.dtos.auth.LoginDTO;
-import com.blogapp.dtos.auth.RegistrazioneDTO;
-import com.blogapp.dtos.auth.UtenteOutputDTO;
+import com.blogapp.dtos.auth.*;
 import com.blogapp.entities.auth.Ruolo;
 import com.blogapp.entities.auth.Utente;
 import com.blogapp.repositories.auth.RuoloRepository;
@@ -15,10 +12,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -62,5 +61,15 @@ public class UtenteServiceImpl implements UtenteService {
         } catch(Exception ex) {
            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore del server");
         }
+    }
+
+    @Override
+    public Set<RuoloOutputDTO> userRoles() {
+        Set<Ruolo> ruoli = utenteRepository.findRolesByEmail(
+                (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+        );
+        return ruoli.stream()
+                .map(r -> modelMapper.map(r, RuoloOutputDTO.class))
+                .collect(Collectors.toSet());
     }
 }

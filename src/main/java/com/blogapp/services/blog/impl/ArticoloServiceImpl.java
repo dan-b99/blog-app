@@ -3,7 +3,6 @@ package com.blogapp.services.blog.impl;
 import com.blogapp.dtos.blog.AggiuntaArticoloDTO;
 import com.blogapp.dtos.blog.VisualizzaArticoloDTO;
 import com.blogapp.entities.blog.Articolo;
-import com.blogapp.entities.blog.Categoria;
 import com.blogapp.entities.blog.Tag;
 import com.blogapp.repositories.auth.UtenteRepository;
 import com.blogapp.repositories.blog.ArticoloRepository;
@@ -14,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,17 +31,14 @@ public class ArticoloServiceImpl implements ArticoloService {
     @Override
     public void aggiungi(AggiuntaArticoloDTO articolo) {
         Set<Tag> tagsArticolo = articolo.getTags().stream().map(t -> modelMapper.map(t, Tag.class)).collect(Collectors.toSet());
-        Set<Categoria> categorieArticolo = articolo.getCategorie().stream().map(c -> modelMapper.map(c, Categoria.class)).collect(Collectors.toSet());
         for(Tag tag : tagsArticolo) {
             tagRepository.findByNome(tag.getNome()).orElseGet(() -> tagRepository.save(tag));
-        }
-        for(Categoria c : categorieArticolo) {
-            categoriaRepository.findByNome(c.getNome()).orElseGet(() -> categoriaRepository.save(c));
         }
         Articolo nuovoArticolo = modelMapper.map(articolo, Articolo.class);
         nuovoArticolo.setUtente(utenteRepository.findByEmail(
                 (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).get()
         );
+        nuovoArticolo.setCategorie(new HashSet<>(categoriaRepository.findAllById(articolo.getCategorie())));
         articoloRepository.save(nuovoArticolo);
     }
     @Override
