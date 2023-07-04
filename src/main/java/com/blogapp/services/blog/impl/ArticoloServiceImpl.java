@@ -1,6 +1,7 @@
 package com.blogapp.services.blog.impl;
 
 import com.blogapp.dtos.blog.AggiuntaArticoloDTO;
+import com.blogapp.dtos.blog.AggiuntaTagDTO;
 import com.blogapp.dtos.blog.ValidazioneDinamicaDTO;
 import com.blogapp.dtos.blog.VisualizzaArticoloDTO;
 import com.blogapp.entities.blog.Articolo;
@@ -21,7 +22,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -33,21 +33,17 @@ public class ArticoloServiceImpl implements ArticoloService {
     private final UtenteRepository utenteRepository;
     private final ValidazioneRepository validazioneRepository;
     private final ModelMapper modelMapper;
-    private String regex = "<img[^>]*>";
+    private String regex = "<[^>]*>";
 
     @Override
     public void aggiungi(AggiuntaArticoloDTO articolo) {
-        Set<Tag> tagsArticolo = articolo.getTags().stream().map(t -> modelMapper.map(t, Tag.class)).collect(Collectors.toSet());
-        for(Tag tag : tagsArticolo) {
-            tagRepository.findByNome(tag.getNome()).orElseGet(() -> tagRepository.save(tag));
-        }
         Articolo nuovoArticolo = modelMapper.map(articolo, Articolo.class);
         Validazione validazioneTitolo = validazioneRepository.findByCampo("titolo").get();
         Validazione validazioneCont = validazioneRepository.findByCampo("contenuto").get();
-        if((articolo.getTitolo().length() > validazioneTitolo.getMassimo())) {
+        if((articolo.getTitolo().replaceAll(regex, "").length() > validazioneTitolo.getMassimo())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Il titolo è troppo lungo");
         }
-        else if(articolo.getTitolo().length() < validazioneTitolo.getMinimo()) {
+        else if(articolo.getTitolo().replaceAll(regex, "").length() < validazioneTitolo.getMinimo()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Il titolo è troppo corto");
         }
         if((articolo.getContenuto().replaceAll(regex, "").length()) > validazioneCont.getMassimo()) {
@@ -61,6 +57,24 @@ public class ArticoloServiceImpl implements ArticoloService {
         );
         nuovoArticolo.setCategorie(new HashSet<>(categoriaRepository.findAllById(articolo.getCategorie())));
         articoloRepository.save(nuovoArticolo);
+        if(!articolo.getTags().isEmpty()) {
+            Set<Tag> tagsToAdd = new HashSet<>();
+            for(AggiuntaTagDTO addTag : articolo.getTags()) {
+                if(tagRepository.findByNome(addTag.getNome()).isPresent()) {
+                    Tag presTag = tagRepository.findByNome(addTag.getNome()).get();
+                    List<Articolo> articoliAssociati = presTag.getArticoli();
+                    articoliAssociati.add(articoloRepository.findById(nuovoArticolo.getId()).get());
+                    tagsToAdd.add(tagRepository.save(presTag));
+                }
+                else {
+                    Tag notPres = modelMapper.map(addTag, Tag.class);
+                    notPres.setArticoli(List.of(articoloRepository.findById(nuovoArticolo.getId()).get()));
+                    tagsToAdd.add(tagRepository.save(notPres));
+                }
+            }
+            nuovoArticolo.setTags(new HashSet<>(tagRepository.findAllById(tagsToAdd.stream().map(Tag::getId).toList())));
+            articoloRepository.save(nuovoArticolo);
+        }
     }
     @Override
     public List<VisualizzaArticoloDTO> getAll() {

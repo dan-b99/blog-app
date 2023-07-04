@@ -6,6 +6,8 @@ import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Transactional
+@DynamicUpdate
 @Entity
 public class Articolo {
     @Id

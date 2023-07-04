@@ -1,15 +1,19 @@
 package com.blogapp.entities.blog;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Transactional
+@DynamicUpdate
 @Entity
 public class Tag {
     @Id
