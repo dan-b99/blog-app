@@ -23,5 +23,5 @@ public class VisualizzaArticoloDTO {
     private UtenteOutputDTO utente;
     private Set<VisualizzaCategoriaDTO> categorie;
     private List<VisualizzaCommentoDTO> commenti = new ArrayList<>();
-    private int voti;
+    private List<VisualizzaVotoDTO> voti;
 }

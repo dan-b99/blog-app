@@ -26,6 +26,10 @@ public class ArticoloController {
     public ResponseEntity<List<VisualizzaArticoloDTO>> getAll() {
         return new ResponseEntity<>(articoloService.getAll(), HttpStatus.OK);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<VisualizzaArticoloDTO> getById(@PathVariable Long id) {
+        return new ResponseEntity<>(articoloService.byId(id), HttpStatus.OK);
+    }
     @PostMapping("/by-categories")
     public ResponseEntity<List<VisualizzaArticoloDTO>> byCategorie(@RequestBody Long... ids) {
         return new ResponseEntity<>(articoloService.byCategorie(ids), HttpStatus.OK);

@@ -82,6 +82,13 @@ public class ArticoloServiceImpl implements ArticoloService {
                 .map(a -> modelMapper.map(a, VisualizzaArticoloDTO.class))
                 .toList();
     }
+
+    @Override
+    public VisualizzaArticoloDTO byId(Long id) {
+        return modelMapper.map(articoloRepository.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "ID errato")), VisualizzaArticoloDTO.class);
+    }
+
     @Override
     public List<VisualizzaArticoloDTO> byCategorie(Long... ids) {
         return articoloRepository.findByCategorie(ids).stream()

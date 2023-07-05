@@ -9,6 +9,7 @@ public interface ArticoloService {
 
     void aggiungi(AggiuntaArticoloDTO articolo);
     List<VisualizzaArticoloDTO> getAll();
+    VisualizzaArticoloDTO byId(Long id);
     List<VisualizzaArticoloDTO> byCategorie(Long... ids);
     List<VisualizzaArticoloDTO> byTags(Long... ids);
     void setValidazioni(ValidazioneDinamicaDTO validazioneDinamicaDTO);
