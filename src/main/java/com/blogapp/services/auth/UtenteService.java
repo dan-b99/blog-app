@@ -8,4 +8,5 @@ public interface UtenteService {
     UtenteOutputDTO registrazione(RegistrazioneDTO registrazioneDTO);
     AutenticazioneDTO login(LoginDTO loginDTO);
     Set<RuoloOutputDTO> userRoles();
+    void setValidazionePassword(ValidazioneDinamicaPasswordDTO validazioniPassword);
 }

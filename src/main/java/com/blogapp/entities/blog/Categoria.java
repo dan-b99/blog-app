@@ -5,21 +5,23 @@ import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
 @Transactional
+@DynamicUpdate
+@Entity
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
     private String nome;
-    @ManyToMany(mappedBy = "categorie")
+    @ManyToMany(mappedBy = "categorie", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Articolo> articoli = new ArrayList<>();
 
     public Categoria(String nome) {

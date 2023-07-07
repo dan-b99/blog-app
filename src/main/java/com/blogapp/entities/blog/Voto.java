@@ -2,13 +2,17 @@ package com.blogapp.entities.blog;
 
 import com.blogapp.entities.auth.Utente;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Transactional
+@DynamicUpdate
 @Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "UN_voto", columnNames = {"utente_id", "articolo_id"})

@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ValidazioneDinamicaDTO {
+public class ValidazioneDinamicaBlogDTO {
 
     private String campo;
     private int minimo;

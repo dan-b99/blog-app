@@ -33,11 +33,11 @@ public class Utente {
     private String email;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Ruolo> ruoli;
-    @OneToMany(mappedBy = "utente")
+    @OneToMany(mappedBy = "utente", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Articolo> articoli = new ArrayList<>();
-    @OneToMany(mappedBy = "autore")
+    @OneToMany(mappedBy = "autore", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Commento> commenti = new ArrayList<>();
-    @OneToMany(mappedBy = "utente")
+    @OneToMany(mappedBy = "utente", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Voto> votazioni = new ArrayList<>();
 
     public Utente(String username, String password, Set<Ruolo> ruoli) {

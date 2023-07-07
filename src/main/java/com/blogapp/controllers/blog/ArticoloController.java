@@ -1,7 +1,7 @@
 package com.blogapp.controllers.blog;
 
 import com.blogapp.dtos.blog.AggiuntaArticoloDTO;
-import com.blogapp.dtos.blog.ValidazioneDinamicaDTO;
+import com.blogapp.dtos.blog.ValidazioneDinamicaBlogDTO;
 import com.blogapp.dtos.blog.VisualizzaArticoloDTO;
 import com.blogapp.services.blog.ArticoloService;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +38,9 @@ public class ArticoloController {
     public ResponseEntity<List<VisualizzaArticoloDTO>> byTags(@RequestBody Long... ids) {
         return new ResponseEntity<>(articoloService.byTags(ids), HttpStatus.OK);
     }
-    @PutMapping("/custom-validation")
-    public ResponseEntity<Void> setValidations(@RequestBody ValidazioneDinamicaDTO validazioneDinamicaDTO) {
-        articoloService.setValidazioni(validazioneDinamicaDTO);
+    @PutMapping("/custom-blog-validation")
+    public ResponseEntity<Void> setBlogValidations(@RequestBody ValidazioneDinamicaBlogDTO validazioneDinamicaBlogDTO) {
+        articoloService.setValidazioniArticolo(validazioneDinamicaBlogDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

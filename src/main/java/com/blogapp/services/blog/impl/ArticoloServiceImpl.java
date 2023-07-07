@@ -1,17 +1,11 @@
 package com.blogapp.services.blog.impl;
 
-import com.blogapp.dtos.blog.AggiuntaArticoloDTO;
-import com.blogapp.dtos.blog.AggiuntaTagDTO;
-import com.blogapp.dtos.blog.ValidazioneDinamicaDTO;
-import com.blogapp.dtos.blog.VisualizzaArticoloDTO;
+import com.blogapp.dtos.blog.*;
 import com.blogapp.entities.blog.Articolo;
 import com.blogapp.entities.blog.Tag;
 import com.blogapp.entities.blog.Validazione;
 import com.blogapp.repositories.auth.UtenteRepository;
-import com.blogapp.repositories.blog.ArticoloRepository;
-import com.blogapp.repositories.blog.CategoriaRepository;
-import com.blogapp.repositories.blog.TagRepository;
-import com.blogapp.repositories.blog.ValidazioneRepository;
+import com.blogapp.repositories.blog.*;
 import com.blogapp.services.blog.ArticoloService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,9 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -30,6 +22,7 @@ public class ArticoloServiceImpl implements ArticoloService {
     private final ArticoloRepository articoloRepository;
     private final TagRepository tagRepository;
     private final CategoriaRepository categoriaRepository;
+    private final VotoRepository votoRepository;
     private final UtenteRepository utenteRepository;
     private final ValidazioneRepository validazioneRepository;
     private final ModelMapper modelMapper;
@@ -55,7 +48,7 @@ public class ArticoloServiceImpl implements ArticoloService {
         nuovoArticolo.setUtente(utenteRepository.findByEmail(
                 (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).get()
         );
-        nuovoArticolo.setCategorie(new HashSet<>(categoriaRepository.findAllById(articolo.getCategorie())));
+        nuovoArticolo.setCategorie(new LinkedHashSet<>(categoriaRepository.findAllById(articolo.getCategorie())));
         articoloRepository.save(nuovoArticolo);
         if(!articolo.getTags().isEmpty()) {
             Set<Tag> tagsToAdd = new HashSet<>();
@@ -102,12 +95,19 @@ public class ArticoloServiceImpl implements ArticoloService {
                 .toList();
     }
     @Override
-    public void setValidazioni(ValidazioneDinamicaDTO validazioneDinamica) {
+    public void setValidazioniArticolo(ValidazioneDinamicaBlogDTO validazioneDinamica) {
+        if(validazioneDinamica.getMinimo() > validazioneDinamica.getMassimo()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valori errati");
+        }
         Validazione validazione = validazioneRepository.findByCampo(validazioneDinamica.getCampo()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Validazione non trovata")
         );
         validazione.setMinimo(validazioneDinamica.getMinimo());
         validazione.setMassimo(validazioneDinamica.getMassimo());
         validazioneRepository.save(validazione);
+    }
+    @Override
+    public void setLike(AggiuntaVotoDTO voto) {
+
     }
 }

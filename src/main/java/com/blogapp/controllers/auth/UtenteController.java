@@ -27,4 +27,9 @@ public class UtenteController {
     public ResponseEntity<Set<RuoloOutputDTO>> ruoliUtente() {
         return new ResponseEntity<>(utenteService.userRoles(), HttpStatus.OK);
     }
+    @PutMapping("/custom-password-validation")
+    public ResponseEntity<Void> setPasswordValidation(@RequestBody ValidazioneDinamicaPasswordDTO validazioneDinamicaPasswordDTO) {
+        utenteService.setValidazionePassword(validazioneDinamicaPasswordDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

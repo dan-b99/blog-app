@@ -26,6 +26,12 @@ public class Validazione {
     private int minimo;
     @Column(nullable = false)
     private int massimo;
+    @Column(unique = true)
+    private Boolean caratteriSpeciali;
+    @Column(unique = true)
+    private Boolean maiuscole;
+    @Column(unique = true)
+    private String regexPass;
 
     public Validazione(String campo, int minimo, int massimo) {
         this.campo = campo;

@@ -27,16 +27,16 @@ public class Articolo {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String contenuto;
     @Column(nullable = false)
-    @ManyToMany(mappedBy = "articoli")
+    @ManyToMany(mappedBy = "articoli", cascade = {CascadeType.REMOVE})
     private Set<Tag> tags = new HashSet<>();
     @JoinColumn(name = "utente_id")
     @ManyToOne
     private Utente utente;
     @ManyToMany
     private Set<Categoria> categorie;
-    @OneToMany(mappedBy = "articolo")
+    @OneToMany(mappedBy = "articolo", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Commento> commenti = new ArrayList<>();
-    @OneToMany(mappedBy = "articolo")
+    @OneToMany(mappedBy = "articolo", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Voto> voti = new ArrayList<>();
     private boolean approvato;
 

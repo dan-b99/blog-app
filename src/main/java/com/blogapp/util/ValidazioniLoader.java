@@ -18,7 +18,8 @@ public class ValidazioniLoader {
         if(validazioneRepository.count() == 0) {
             Validazione validazione1 = new Validazione("titolo", 1, Integer.MAX_VALUE);
             Validazione validazione2 = new Validazione("contenuto", 1, Integer.MAX_VALUE);
-            validazioneRepository.saveAll(List.of(validazione1, validazione2));
+            Validazione validazione3 = new Validazione("password", 1, Integer.MAX_VALUE);
+            validazioneRepository.saveAll(List.of(validazione1, validazione2, validazione3));
         }
     }
 }

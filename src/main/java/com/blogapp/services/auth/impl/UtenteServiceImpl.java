@@ -3,8 +3,10 @@ package com.blogapp.services.auth.impl;
 import com.blogapp.dtos.auth.*;
 import com.blogapp.entities.auth.Ruolo;
 import com.blogapp.entities.auth.Utente;
+import com.blogapp.entities.blog.Validazione;
 import com.blogapp.repositories.auth.RuoloRepository;
 import com.blogapp.repositories.auth.UtenteRepository;
+import com.blogapp.repositories.blog.ValidazioneRepository;
 import com.blogapp.services.auth.UtenteService;
 import com.blogapp.util.JWTUtil;
 import com.blogapp.util.PasswordUtil;
@@ -25,6 +27,7 @@ public class UtenteServiceImpl implements UtenteService {
 
     private final UtenteRepository utenteRepository;
     private final RuoloRepository ruoloRepository;
+    private final ValidazioneRepository validazioneRepository;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
     private final PasswordUtil passwordUtil;
@@ -71,5 +74,41 @@ public class UtenteServiceImpl implements UtenteService {
         return ruoli.stream()
                 .map(r -> modelMapper.map(r, RuoloOutputDTO.class))
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public void setValidazionePassword(ValidazioneDinamicaPasswordDTO validazioniPassword) {
+        if(validazioniPassword.getMinimo() > validazioniPassword.getMassimo()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valori errati");
+        }
+        if(validazioniPassword.getCaratteriSpeciali() && validazioniPassword.getMaiuscole()) {
+            validazioniPassword.setRegexPass(
+                    String.format("[A-Za-z0-9\\p{Punct}]{%d,%d}", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
+            );
+        }
+        else if(!validazioniPassword.getMaiuscole() && !validazioniPassword.getCaratteriSpeciali()) {
+            validazioniPassword.setRegexPass(
+                    String.format("[a-z0-9]{%d,%d}", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
+            );
+        }
+        else if(validazioniPassword.getMaiuscole() && !validazioniPassword.getCaratteriSpeciali()) {
+            validazioniPassword.setRegexPass(
+                    String.format("[a-zA-Z0-9]{%d,%d}", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
+            );
+        }
+        else {
+            validazioniPassword.setRegexPass(
+                    String.format("[a-z0-9\\p{Punct}]{%d,%d}", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
+            );
+        }
+        Validazione validazione = validazioneRepository.findByCampo(validazioniPassword.getCampo()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Campo non trovato")
+        );
+        validazione.setMinimo(validazioniPassword.getMinimo());
+        validazione.setMassimo(validazioniPassword.getMassimo());
+        validazione.setCaratteriSpeciali(validazioniPassword.getCaratteriSpeciali());
+        validazione.setMaiuscole(validazioniPassword.getMaiuscole());
+        validazione.setRegexPass(validazioniPassword.getRegexPass());
+        validazioneRepository.save(validazione);
     }
 }
