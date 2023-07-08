@@ -1,6 +1,7 @@
 package com.blogapp.controllers.blog;
 
 import com.blogapp.dtos.blog.AggiuntaArticoloDTO;
+import com.blogapp.dtos.blog.AggiuntaVotoDTO;
 import com.blogapp.dtos.blog.ValidazioneDinamicaBlogDTO;
 import com.blogapp.dtos.blog.VisualizzaArticoloDTO;
 import com.blogapp.services.blog.ArticoloService;
@@ -41,6 +42,11 @@ public class ArticoloController {
     @PutMapping("/custom-blog-validation")
     public ResponseEntity<Void> setBlogValidations(@RequestBody ValidazioneDinamicaBlogDTO validazioneDinamicaBlogDTO) {
         articoloService.setValidazioniArticolo(validazioneDinamicaBlogDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PostMapping("/voted")
+    public ResponseEntity<Void> voted(@RequestBody AggiuntaVotoDTO voto) {
+        articoloService.setVote(voto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

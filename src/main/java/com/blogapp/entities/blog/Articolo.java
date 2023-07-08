@@ -27,7 +27,7 @@ public class Articolo {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String contenuto;
     @Column(nullable = false)
-    @ManyToMany(mappedBy = "articoli", cascade = {CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "articoli", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Set<Tag> tags = new HashSet<>();
     @JoinColumn(name = "utente_id")
     @ManyToOne

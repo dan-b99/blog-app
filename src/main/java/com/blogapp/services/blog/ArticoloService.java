@@ -14,5 +14,5 @@ public interface ArticoloService {
     List<VisualizzaArticoloDTO> byCategorie(Long... ids);
     List<VisualizzaArticoloDTO> byTags(Long... ids);
     void setValidazioniArticolo(ValidazioneDinamicaBlogDTO validazioneDinamicaBlogDTO);
-    void setLike(AggiuntaVotoDTO voto);
+    void setVote(AggiuntaVotoDTO voto);
 }

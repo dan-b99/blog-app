@@ -4,6 +4,7 @@ import com.blogapp.dtos.blog.*;
 import com.blogapp.entities.blog.Articolo;
 import com.blogapp.entities.blog.Tag;
 import com.blogapp.entities.blog.Validazione;
+import com.blogapp.entities.blog.Voto;
 import com.blogapp.repositories.auth.UtenteRepository;
 import com.blogapp.repositories.blog.*;
 import com.blogapp.services.blog.ArticoloService;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -49,25 +51,10 @@ public class ArticoloServiceImpl implements ArticoloService {
                 (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).get()
         );
         nuovoArticolo.setCategorie(new LinkedHashSet<>(categoriaRepository.findAllById(articolo.getCategorie())));
+        Set<Tag> tagDaAggiungere = articolo.getTags().stream().map(nt -> modelMapper.map(nt, Tag.class)).collect(Collectors.toSet());
+        tagDaAggiungere.forEach(t -> t.setArticoli(List.of(nuovoArticolo)));
+        nuovoArticolo.setTags(tagDaAggiungere);
         articoloRepository.save(nuovoArticolo);
-        if(!articolo.getTags().isEmpty()) {
-            Set<Tag> tagsToAdd = new HashSet<>();
-            for(AggiuntaTagDTO addTag : articolo.getTags()) {
-                if(tagRepository.findByNome(addTag.getNome()).isPresent()) {
-                    Tag presTag = tagRepository.findByNome(addTag.getNome()).get();
-                    List<Articolo> articoliAssociati = presTag.getArticoli();
-                    articoliAssociati.add(articoloRepository.findById(nuovoArticolo.getId()).get());
-                    tagsToAdd.add(tagRepository.save(presTag));
-                }
-                else {
-                    Tag notPres = modelMapper.map(addTag, Tag.class);
-                    notPres.setArticoli(List.of(articoloRepository.findById(nuovoArticolo.getId()).get()));
-                    tagsToAdd.add(tagRepository.save(notPres));
-                }
-            }
-            nuovoArticolo.setTags(new HashSet<>(tagRepository.findAllById(tagsToAdd.stream().map(Tag::getId).toList())));
-            articoloRepository.save(nuovoArticolo);
-        }
     }
     @Override
     public List<VisualizzaArticoloDTO> getAll() {
@@ -107,7 +94,24 @@ public class ArticoloServiceImpl implements ArticoloService {
         validazioneRepository.save(validazione);
     }
     @Override
-    public void setLike(AggiuntaVotoDTO voto) {
-
+    public void setVote(AggiuntaVotoDTO voto) {
+        if(votoRepository.findByUtenteIdAndArticoloId(voto.getUtente(), voto.getArticolo()).isPresent()) {
+            Voto votoPresente = votoRepository.findByUtenteIdAndArticoloId(voto.getUtente(), voto.getArticolo()).get();
+            if(voto.getVoto() != votoPresente.getVoto()) {
+                votoPresente.setVoto(voto.getVoto());
+                votoRepository.save(votoPresente);
+            }
+            else if(voto.getVoto() == votoPresente.getVoto()) {
+                votoRepository.delete(votoPresente);
+            }
+        }
+        else {
+            Voto votoDaAggiungere = modelMapper.map(voto, Voto.class);
+            votoDaAggiungere.setUtente(utenteRepository.findById(voto.getUtente())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato")));
+            votoDaAggiungere.setArticolo(articoloRepository.findById(voto.getArticolo())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non trovato")));
+            votoRepository.save(votoDaAggiungere);
+        }
     }
 }
