@@ -1,9 +1,6 @@
 package com.blogapp.services.blog;
 
-import com.blogapp.dtos.blog.AggiuntaArticoloDTO;
-import com.blogapp.dtos.blog.AggiuntaVotoDTO;
-import com.blogapp.dtos.blog.ValidazioneDinamicaBlogDTO;
-import com.blogapp.dtos.blog.VisualizzaArticoloDTO;
+import com.blogapp.dtos.blog.*;
 import java.util.List;
 
 public interface ArticoloService {
@@ -12,7 +9,8 @@ public interface ArticoloService {
     List<VisualizzaArticoloDTO> getAll();
     VisualizzaArticoloDTO byId(Long id);
     List<VisualizzaArticoloDTO> byCategorie(Long... ids);
-    List<VisualizzaArticoloDTO> byTags(Long... ids);
+    List<VisualizzaArticoloDTO> byTags(String... tags);
+    List<VisualizzaArticoloDTO> byContenutoOrTitolo(String keyword);
     void setValidazioniArticolo(ValidazioneDinamicaBlogDTO validazioneDinamicaBlogDTO);
     void setVote(AggiuntaVotoDTO voto);
 }

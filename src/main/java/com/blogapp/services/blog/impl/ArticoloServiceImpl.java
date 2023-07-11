@@ -76,11 +76,27 @@ public class ArticoloServiceImpl implements ArticoloService {
                 .toList();
     }
     @Override
-    public List<VisualizzaArticoloDTO> byTags(Long... ids) {
-        return articoloRepository.findByTags(ids).stream()
+    public List<VisualizzaArticoloDTO> byTags(String... tags) {
+        List<VisualizzaArticoloDTO> risultato = articoloRepository.findByTags(tags).stream()
                 .map(art -> modelMapper.map(art, VisualizzaArticoloDTO.class))
                 .toList();
+        if(!risultato.isEmpty()) {
+            return risultato;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessun risultato");
     }
+
+    @Override
+    public List<VisualizzaArticoloDTO> byContenutoOrTitolo(String keyword) {
+        List<VisualizzaArticoloDTO> lista = articoloRepository.findByContenutoOrTitolo(keyword).stream()
+                .map(art -> modelMapper.map(art, VisualizzaArticoloDTO.class))
+                .toList();
+        if(!lista.isEmpty()) {
+            return lista;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessun risultato");
+    }
+
     @Override
     public void setValidazioniArticolo(ValidazioneDinamicaBlogDTO validazioneDinamica) {
         if(validazioneDinamica.getMinimo() > validazioneDinamica.getMassimo()) {

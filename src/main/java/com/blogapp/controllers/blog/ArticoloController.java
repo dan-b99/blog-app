@@ -36,8 +36,12 @@ public class ArticoloController {
         return new ResponseEntity<>(articoloService.byCategorie(ids), HttpStatus.OK);
     }
     @PostMapping("/by-tags")
-    public ResponseEntity<List<VisualizzaArticoloDTO>> byTags(@RequestBody Long... ids) {
-        return new ResponseEntity<>(articoloService.byTags(ids), HttpStatus.OK);
+    public ResponseEntity<List<VisualizzaArticoloDTO>> byTags(@RequestBody String... tags) {
+        return new ResponseEntity<>(articoloService.byTags(tags), HttpStatus.OK);
+    }
+    @GetMapping("/by-keyword")
+    public ResponseEntity<List<VisualizzaArticoloDTO>> byKeyword(@RequestParam String keyword) {
+        return new ResponseEntity<>(articoloService.byContenutoOrTitolo(keyword), HttpStatus.OK);
     }
     @PutMapping("/custom-blog-validation")
     public ResponseEntity<Void> setBlogValidations(@RequestBody ValidazioneDinamicaBlogDTO validazioneDinamicaBlogDTO) {
