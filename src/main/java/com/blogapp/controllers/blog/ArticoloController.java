@@ -23,9 +23,13 @@ public class ArticoloController {
         articoloService.aggiungi(articolo);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @GetMapping("/all")
+    @GetMapping("/not-approved")
+    public ResponseEntity<List<VisualizzaArticoloDTO>> getNotApproved() {
+        return new ResponseEntity<>(articoloService.getAllNotApprovati(), HttpStatus.OK);
+    }
+    @GetMapping("/all-approved")
     public ResponseEntity<List<VisualizzaArticoloDTO>> getAll() {
-        return new ResponseEntity<>(articoloService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(articoloService.getAllApprovati(), HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity<VisualizzaArticoloDTO> getById(@PathVariable Long id) {

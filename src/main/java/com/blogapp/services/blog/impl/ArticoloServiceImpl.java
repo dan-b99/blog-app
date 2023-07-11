@@ -56,9 +56,17 @@ public class ArticoloServiceImpl implements ArticoloService {
         nuovoArticolo.setTags(tagDaAggiungere);
         articoloRepository.save(nuovoArticolo);
     }
+
     @Override
-    public List<VisualizzaArticoloDTO> getAll() {
-        return articoloRepository.findAll().stream()
+    public List<VisualizzaArticoloDTO> getAllNotApprovati() {
+        return articoloRepository.findAllNotApprovati().stream()
+                .map(art -> modelMapper.map(art, VisualizzaArticoloDTO.class))
+                .toList();
+    }
+
+    @Override
+    public List<VisualizzaArticoloDTO> getAllApprovati() {
+        return articoloRepository.findAllApprovati().stream()
                 .map(a -> modelMapper.map(a, VisualizzaArticoloDTO.class))
                 .toList();
     }

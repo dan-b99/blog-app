@@ -45,6 +45,7 @@ public class ApplicationConfig {
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
            requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/users/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.PUT, "/users/**").hasRole("ADMIN");
+           requestMatcherRegistry.requestMatchers("/articles/not-approved").hasRole("ADMIN");
            requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/articles/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/articles/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.PUT, "/articles/**").hasRole("ADMIN");

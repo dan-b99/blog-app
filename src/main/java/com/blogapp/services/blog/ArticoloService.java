@@ -6,7 +6,8 @@ import java.util.List;
 public interface ArticoloService {
 
     void aggiungi(AggiuntaArticoloDTO articolo);
-    List<VisualizzaArticoloDTO> getAll();
+    List<VisualizzaArticoloDTO> getAllNotApprovati();
+    List<VisualizzaArticoloDTO> getAllApprovati();
     VisualizzaArticoloDTO byId(Long id);
     List<VisualizzaArticoloDTO> byCategorie(Long... ids);
     List<VisualizzaArticoloDTO> byTags(String... tags);
