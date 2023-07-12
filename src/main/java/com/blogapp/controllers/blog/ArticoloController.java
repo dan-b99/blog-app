@@ -31,9 +31,13 @@ public class ArticoloController {
     public ResponseEntity<List<VisualizzaArticoloDTO>> getAll() {
         return new ResponseEntity<>(articoloService.getAllApprovati(), HttpStatus.OK);
     }
-    @GetMapping("/{id}")
+    @GetMapping("/not-approved/{id}")
+    public ResponseEntity<VisualizzaArticoloDTO> readNotApproved(@PathVariable Long id) {
+        return new ResponseEntity<>(articoloService.notApprovedById(id), HttpStatus.OK);
+    }
+    @GetMapping("/approved/{id}")
     public ResponseEntity<VisualizzaArticoloDTO> getById(@PathVariable Long id) {
-        return new ResponseEntity<>(articoloService.byId(id), HttpStatus.OK);
+        return new ResponseEntity<>(articoloService.approvedById(id), HttpStatus.OK);
     }
     @PostMapping("/by-categories")
     public ResponseEntity<List<VisualizzaArticoloDTO>> byCategorie(@RequestBody Long... ids) {
@@ -46,6 +50,16 @@ public class ArticoloController {
     @GetMapping("/by-keyword")
     public ResponseEntity<List<VisualizzaArticoloDTO>> byKeyword(@RequestParam String keyword) {
         return new ResponseEntity<>(articoloService.byContenutoOrTitolo(keyword), HttpStatus.OK);
+    }
+    @PutMapping("/approve")
+    public ResponseEntity<Void> approve(@RequestBody Long id) {
+        articoloService.approveArticle(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@RequestBody Long id) {
+        articoloService.deleteArticolo(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @PutMapping("/custom-blog-validation")
     public ResponseEntity<Void> setBlogValidations(@RequestBody ValidazioneDinamicaBlogDTO validazioneDinamicaBlogDTO) {

@@ -72,16 +72,39 @@ public class ArticoloServiceImpl implements ArticoloService {
     }
 
     @Override
-    public VisualizzaArticoloDTO byId(Long id) {
-        return modelMapper.map(articoloRepository.findById(id).orElseThrow(() ->
+    public VisualizzaArticoloDTO notApprovedById(Long id) {
+        return modelMapper.map(articoloRepository.readNotApproved(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "ID errato")), VisualizzaArticoloDTO.class);
+    }
+
+    @Override
+    public void approveArticle(Long id) {
+        articoloRepository.findById(id).ifPresent(art -> {
+            art.setApprovato(true);
+            articoloRepository.save(art);
+        });
+    }
+
+    @Override
+    public void deleteArticolo(Long id) {
+        articoloRepository.findById(id).ifPresent(art -> articoloRepository.deleteById(id));
+    }
+
+    @Override
+    public VisualizzaArticoloDTO approvedById(Long id) {
+        return modelMapper.map(articoloRepository.findApprovatoById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "ID errato")), VisualizzaArticoloDTO.class);
     }
 
     @Override
     public List<VisualizzaArticoloDTO> byCategorie(Long... ids) {
-        return articoloRepository.findByCategorie(ids).stream()
+        List<VisualizzaArticoloDTO> risultato = articoloRepository.findByCategorie(ids).stream()
                 .map(art -> modelMapper.map(art, VisualizzaArticoloDTO.class))
                 .toList();
+        if(!risultato.isEmpty()) {
+            return risultato;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nessun risultato");
     }
     @Override
     public List<VisualizzaArticoloDTO> byTags(String... tags) {

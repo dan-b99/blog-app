@@ -8,7 +8,10 @@ public interface ArticoloService {
     void aggiungi(AggiuntaArticoloDTO articolo);
     List<VisualizzaArticoloDTO> getAllNotApprovati();
     List<VisualizzaArticoloDTO> getAllApprovati();
-    VisualizzaArticoloDTO byId(Long id);
+    VisualizzaArticoloDTO notApprovedById(Long id);
+    void approveArticle(Long id);
+    void deleteArticolo(Long id);
+    VisualizzaArticoloDTO approvedById(Long id);
     List<VisualizzaArticoloDTO> byCategorie(Long... ids);
     List<VisualizzaArticoloDTO> byTags(String... tags);
     List<VisualizzaArticoloDTO> byContenutoOrTitolo(String keyword);
