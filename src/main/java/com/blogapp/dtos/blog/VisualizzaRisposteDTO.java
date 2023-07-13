@@ -6,16 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VisualizzaCommentoDTO {
+@Getter
+@Setter
+public class VisualizzaRisposteDTO {
 
     private Long id;
     private String testo;
-    private UtenteCommentoDTO autore;
-    private List<VisualizzaRisposteDTO> risposte;
+    private UtenteCommentoDTO utente;
 }

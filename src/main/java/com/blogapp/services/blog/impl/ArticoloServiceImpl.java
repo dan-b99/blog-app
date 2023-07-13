@@ -1,10 +1,8 @@
 package com.blogapp.services.blog.impl;
 
 import com.blogapp.dtos.blog.*;
-import com.blogapp.entities.blog.Articolo;
-import com.blogapp.entities.blog.Tag;
-import com.blogapp.entities.blog.Validazione;
-import com.blogapp.entities.blog.Voto;
+import com.blogapp.entities.auth.Utente;
+import com.blogapp.entities.blog.*;
 import com.blogapp.repositories.auth.UtenteRepository;
 import com.blogapp.repositories.blog.*;
 import com.blogapp.services.blog.ArticoloService;
@@ -15,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -26,6 +23,7 @@ public class ArticoloServiceImpl implements ArticoloService {
     private final CategoriaRepository categoriaRepository;
     private final VotoRepository votoRepository;
     private final UtenteRepository utenteRepository;
+    private final CommentoRepository commentoRepository;
     private final ValidazioneRepository validazioneRepository;
     private final ModelMapper modelMapper;
     private String regex = "<[^>]*>";
@@ -171,5 +169,25 @@ public class ArticoloServiceImpl implements ArticoloService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non trovato")));
             votoRepository.save(votoDaAggiungere);
         }
+    }
+
+    @Override
+    public void addComment(AggiuntaCommentoDTO comment) {
+        if(articoloRepository.findById(comment.getArticolo()).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID articolo errato");
+        }
+        if((utenteRepository.findById(comment.getAutore()).isEmpty())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID utente errato");
+        }
+        Articolo articolo = articoloRepository.findById(comment.getArticolo()).get();
+        Utente utente = utenteRepository.findById(comment.getAutore()).get();
+        Commento commentoDaAggiungere = modelMapper.map(comment, Commento.class);
+        commentoDaAggiungere.setArticolo(articolo);
+        commentoDaAggiungere.setAutore(utente);
+        articolo.getCommenti().add(commentoDaAggiungere);
+        utente.getCommenti().add(commentoDaAggiungere);
+        commentoRepository.save(commentoDaAggiungere);
+        utenteRepository.save(utente);
+        articoloRepository.save(articolo);
     }
 }

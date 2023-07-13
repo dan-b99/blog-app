@@ -1,9 +1,6 @@
 package com.blogapp.controllers.blog;
 
-import com.blogapp.dtos.blog.AggiuntaArticoloDTO;
-import com.blogapp.dtos.blog.AggiuntaVotoDTO;
-import com.blogapp.dtos.blog.ValidazioneDinamicaBlogDTO;
-import com.blogapp.dtos.blog.VisualizzaArticoloDTO;
+import com.blogapp.dtos.blog.*;
 import com.blogapp.services.blog.ArticoloService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -69,6 +66,11 @@ public class ArticoloController {
     @PostMapping("/voted")
     public ResponseEntity<Void> voted(@RequestBody AggiuntaVotoDTO voto) {
         articoloService.setVote(voto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PostMapping("/add-comment")
+    public ResponseEntity<Void> addComment(@RequestBody AggiuntaCommentoDTO commento) {
+        articoloService.addComment(commento);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
