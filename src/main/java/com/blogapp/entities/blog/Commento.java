@@ -29,7 +29,7 @@ public class Commento {
     @JoinColumn(name = "articolo_id")
     @ManyToOne
     private Articolo articolo;
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Commento> risposte = new ArrayList<>();
 
     public Commento(String testo, Utente autore, Articolo articolo) {

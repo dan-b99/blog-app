@@ -24,7 +24,7 @@ public class Articolo {
     private Long id;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String titolo;
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String contenuto;
     @Column(nullable = false)
     @ManyToMany(mappedBy = "articoli", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
