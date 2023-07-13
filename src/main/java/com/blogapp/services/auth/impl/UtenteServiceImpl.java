@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -57,6 +58,9 @@ public class UtenteServiceImpl implements UtenteService {
         if(!passwordUtil.isMatch(loginDTO.getPassword(), utente.getPassword())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email o password errati");
         }
+        if(utente.isBloccato()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sei stato bloccato");
+        }
         try {
             UtenteOutputDTO utenteOutput = modelMapper.map(utente, UtenteOutputDTO.class);
             Map<String, String> claimsPrivati = Map.of("user", objectMapper.writeValueAsString(utenteOutput));
@@ -64,6 +68,13 @@ public class UtenteServiceImpl implements UtenteService {
         } catch(Exception ex) {
            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore del server");
         }
+    }
+
+    @Override
+    public Set<UtenteOutputDTO> getAll() {
+        return utenteRepository.getAllExceptAdmin().stream()
+                .map(u -> modelMapper.map(u, UtenteOutputDTO.class))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Override
@@ -110,5 +121,32 @@ public class UtenteServiceImpl implements UtenteService {
         validazione.setMaiuscole(validazioniPassword.getMaiuscole());
         validazione.setRegexPass(validazioniPassword.getRegexPass());
         validazioneRepository.save(validazione);
+    }
+
+    @Override
+    public void setBlock(Long id) {
+        if(utenteRepository.findById(id).isPresent()) {
+            Utente utente = utenteRepository.findById(id).get();
+            if(!utente.isBloccato()) {
+                utente.setBloccato(true);
+            }
+            else {
+                utente.setBloccato(false);
+            }
+            utenteRepository.save(utente);
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato");
+        }
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        if(utenteRepository.findById(id).isPresent()) {
+            utenteRepository.deleteById(id);
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato");
+        }
     }
 }

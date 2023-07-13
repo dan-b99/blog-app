@@ -18,4 +18,5 @@ public class UtenteOutputDTO {
     private String cognome;
     private String email;
     private List<RuoloOutputDTO> ruoli;
+    private boolean bloccato;
 }

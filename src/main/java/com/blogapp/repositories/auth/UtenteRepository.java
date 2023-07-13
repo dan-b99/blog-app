@@ -14,4 +14,8 @@ public interface UtenteRepository extends JpaRepository<Utente, Long> {
     Optional<Utente> findByUsername(String username);
     @Query("SELECT u.ruoli FROM Utente u WHERE u.email = :email")
     Set<Ruolo> findRolesByEmail(@Param(value = "email") String email);
+    @Query(value = """
+            SELECT u From Utente u JOIN u.ruoli r GROUP BY u HAVING COUNT(r) <= 1
+            """)
+    Set<Utente> getAllExceptAdmin();
 }

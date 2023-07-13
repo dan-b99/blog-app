@@ -43,8 +43,10 @@ public class ApplicationConfig {
         httpSecurity.authorizeHttpRequests(requestMatcherRegistry -> {
            requestMatcherRegistry.requestMatchers("/error").permitAll();
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
+           requestMatcherRegistry.requestMatchers("/users/all").hasRole("ADMIN");
            requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/users/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.PUT, "/users/**").hasRole("ADMIN");
+           requestMatcherRegistry.requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN");
            requestMatcherRegistry.requestMatchers("/articles/not-approved/**").hasRole("ADMIN");
            requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/articles/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/articles/**").authenticated();

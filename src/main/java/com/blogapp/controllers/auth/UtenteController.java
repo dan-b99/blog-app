@@ -23,6 +23,10 @@ public class UtenteController {
     public ResponseEntity<AutenticazioneDTO> accesso(@RequestBody LoginDTO loginDTO) {
         return new ResponseEntity<>(utenteService.login(loginDTO), HttpStatus.OK);
     }
+    @GetMapping("/all")
+    public ResponseEntity<Set<UtenteOutputDTO>> getAll() {
+        return new ResponseEntity<>(utenteService.getAll(), HttpStatus.OK);
+    }
     @GetMapping("/user-roles")
     public ResponseEntity<Set<RuoloOutputDTO>> ruoliUtente() {
         return new ResponseEntity<>(utenteService.userRoles(), HttpStatus.OK);
@@ -30,6 +34,16 @@ public class UtenteController {
     @PutMapping("/custom-password-validation")
     public ResponseEntity<Void> setPasswordValidation(@RequestBody ValidazioneDinamicaPasswordDTO validazioneDinamicaPasswordDTO) {
         utenteService.setValidazionePassword(validazioneDinamicaPasswordDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PutMapping("/set-block")
+    public ResponseEntity<Void> setBlock(@RequestBody Long id) {
+        utenteService.setBlock(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        utenteService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

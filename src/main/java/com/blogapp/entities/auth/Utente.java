@@ -39,6 +39,7 @@ public class Utente {
     private List<Commento> commenti = new ArrayList<>();
     @OneToMany(mappedBy = "utente", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Voto> votazioni = new ArrayList<>();
+    private boolean bloccato;
 
     public Utente(String username, String password, Set<Ruolo> ruoli) {
         this.username = username;
