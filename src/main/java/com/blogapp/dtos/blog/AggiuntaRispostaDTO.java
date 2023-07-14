@@ -14,5 +14,5 @@ public class AggiuntaRispostaDTO {
     private String testo;
     private Long autore;
     private Long articolo;
-    private Long commento;
+    private Long padre;
 }

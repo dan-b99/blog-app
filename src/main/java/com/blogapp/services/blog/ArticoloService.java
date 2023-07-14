@@ -18,5 +18,5 @@ public interface ArticoloService {
     void setValidazioniArticolo(ValidazioneDinamicaBlogDTO validazioneDinamicaBlogDTO);
     void setVote(AggiuntaVotoDTO voto);
     void addComment(AggiuntaCommentoDTO comment);
-    //void addReply(AggiuntaRispostaDTO reply);
+    void addReply(AggiuntaRispostaDTO reply);
 }

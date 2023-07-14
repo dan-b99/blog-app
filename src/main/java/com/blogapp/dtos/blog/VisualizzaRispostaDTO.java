@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class VisualizzaRisposteDTO {
+public class VisualizzaRispostaDTO {
 
     private Long id;
     private String testo;

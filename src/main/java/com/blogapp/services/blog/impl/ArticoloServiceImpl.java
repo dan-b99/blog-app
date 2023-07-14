@@ -190,4 +190,31 @@ public class ArticoloServiceImpl implements ArticoloService {
         utenteRepository.save(utente);
         articoloRepository.save(articolo);
     }
+
+    @Override
+    public void addReply(AggiuntaRispostaDTO reply) {
+        if(utenteRepository.findById(reply.getAutore()).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente inesistente");
+        }
+        if(articoloRepository.findById(reply.getArticolo()).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo inesistente");
+        }
+        if(commentoRepository.findById(reply.getPadre()).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Commento padre inesistente");
+        }
+        Utente autore = utenteRepository.findById(reply.getAutore()).get();
+        Articolo articolo = articoloRepository.findById(reply.getArticolo()).get();
+        Commento commentoPadre = commentoRepository.findById(reply.getPadre()).get();
+        Commento risposta = modelMapper.map(reply, Commento.class);
+        risposta.setAutore(autore);
+        risposta.setArticolo(articolo);
+        risposta.setPadre(commentoPadre);
+        autore.getCommenti().add(risposta);
+        commentoPadre.getRisposte().add(risposta);
+        articolo.getCommenti().add(commentoPadre);
+        commentoRepository.save(risposta);
+        commentoRepository.save(commentoPadre);
+        utenteRepository.save(autore);
+        articoloRepository.save(articolo);
+    }
 }

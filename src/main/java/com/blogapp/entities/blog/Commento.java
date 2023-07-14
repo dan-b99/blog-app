@@ -28,8 +28,10 @@ public class Commento {
     @JoinColumn(name = "articolo_id")
     @ManyToOne
     private Articolo articolo;
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "padre")
     private List<Commento> risposte = new ArrayList<>();
+    @ManyToOne
+    private Commento padre;
 
     public Commento(String testo, Utente autore, Articolo articolo) {
         this.testo = testo;

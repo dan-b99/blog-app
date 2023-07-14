@@ -73,4 +73,9 @@ public class ArticoloController {
         articoloService.addComment(commento);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PostMapping("/add-reply")
+    public ResponseEntity<Void> addReply(@RequestBody AggiuntaRispostaDTO reply) {
+        articoloService.addReply(reply);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
