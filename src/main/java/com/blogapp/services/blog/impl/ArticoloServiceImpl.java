@@ -49,20 +49,18 @@ public class ArticoloServiceImpl implements ArticoloService {
                 (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).get()
         );
         nuovoArticolo.setCategorie(new LinkedHashSet<>(categoriaRepository.findAllById(articolo.getCategorie())));
-        Set<Tag> tagDaAggiungere = new LinkedHashSet<>();
+        Set<Tag> tagsToAdd = new HashSet<>();
         for(AggiuntaTagDTO tag : articolo.getTags()) {
-            if(tagRepository.findByNome(tag.getNome()).isPresent()) {
-                Tag tagPresemte = tagRepository.findByNome(tag.getNome()).get();
-                tagDaAggiungere.add(tagPresemte);
-                tagPresemte.getArticoli().add(nuovoArticolo);
-            }
-            else {
+            if (tagRepository.findByNome(tag.getNome()).isPresent()) {
+                Tag tagPresente = tagRepository.findByNome(tag.getNome()).get();
+                tagPresente.getArticoli().add(nuovoArticolo);
+            } else {
                 Tag nuovoTag = modelMapper.map(tag, Tag.class);
-                tagDaAggiungere.add(nuovoTag);
                 nuovoTag.setArticoli(List.of(nuovoArticolo));
+                tagsToAdd.add(nuovoTag);
             }
         }
-        nuovoArticolo.setTags(tagDaAggiungere);
+        nuovoArticolo.setTags(tagsToAdd);
         articoloRepository.save(nuovoArticolo);
     }
 

@@ -42,6 +42,10 @@ public class UtenteServiceImpl implements UtenteService {
         utenteRepository.findByUsername(registrazioneDTO.getUsername()).ifPresent(u -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username già in uso");
         });
+        Validazione validazionePass = validazioneRepository.findByCampo("password").get();
+        if(!registrazioneDTO.getPassword().matches(validazionePass.getRegexPass())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La password non soddisfa i requisiti");
+        }
         Utente utente = modelMapper.map(registrazioneDTO, Utente.class);
         utente.setPassword(passwordUtil.crypt(registrazioneDTO.getPassword()));
         utente.setRuoli(Set.of(
@@ -60,6 +64,10 @@ public class UtenteServiceImpl implements UtenteService {
         }
         if(utente.isBloccato()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sei stato bloccato");
+        }
+        Validazione validazionePass = validazioneRepository.findByCampo("password").get();
+        if(!loginDTO.getPassword().matches(validazionePass.getRegexPass())) {
+
         }
         try {
             UtenteOutputDTO utenteOutput = modelMapper.map(utente, UtenteOutputDTO.class);
@@ -94,22 +102,22 @@ public class UtenteServiceImpl implements UtenteService {
         }
         if(validazioniPassword.getCaratteriSpeciali() && validazioniPassword.getMaiuscole()) {
             validazioniPassword.setRegexPass(
-                    String.format("[A-Za-z0-9\\p{Punct}]{%d,%d}", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
+                    String.format("^(?=.*[A-Z])(?=.*\\p{Punct}).{%d,%d}$", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
             );
         }
         else if(!validazioniPassword.getMaiuscole() && !validazioniPassword.getCaratteriSpeciali()) {
             validazioniPassword.setRegexPass(
-                    String.format("[a-z0-9]{%d,%d}", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
+                    String.format("^[a-z0-9]{%d,%d}$", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
             );
         }
         else if(validazioniPassword.getMaiuscole() && !validazioniPassword.getCaratteriSpeciali()) {
             validazioniPassword.setRegexPass(
-                    String.format("[a-zA-Z0-9]{%d,%d}", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
+                    String.format("^(?=.*[A-Z])[a-zA-Z0-9]{%d,%d}$", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
             );
         }
         else {
             validazioniPassword.setRegexPass(
-                    String.format("[a-z0-9\\p{Punct}]{%d,%d}", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
+                    String.format("^(?=.*\\p{Punct})[a-z0-9\\p{Punct}]{3,10}$", validazioniPassword.getMinimo(), validazioniPassword.getMassimo())
             );
         }
         Validazione validazione = validazioneRepository.findByCampo(validazioniPassword.getCampo()).orElseThrow(

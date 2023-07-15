@@ -8,10 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.sql.SQLException;
+
 @Getter
 @Setter
 @NoArgsConstructor
-@Transactional
+@Transactional(rollbackOn = {SQLException.class, RuntimeException.class})
 @DynamicUpdate
 @Entity
 @Table(uniqueConstraints = {

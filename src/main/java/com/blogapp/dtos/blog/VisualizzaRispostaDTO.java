@@ -14,5 +14,5 @@ public class VisualizzaRispostaDTO {
 
     private Long id;
     private String testo;
-    private UtenteCommentoDTO utente;
+    private UtenteCommentoDTO autore;
 }

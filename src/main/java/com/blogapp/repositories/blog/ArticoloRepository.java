@@ -20,6 +20,6 @@ public interface ArticoloRepository extends JpaRepository<Articolo, Long> {
     List<Articolo> findByCategorie(@Param(value = "insIds") Long... idCategorie);
     @Query(value = "SELECT a FROM Articolo a JOIN a.tags t WHERE t.nome IN (:insTags) AND a.approvato = true")
     List<Articolo> findByTags(@Param(value = "insTags") String... tags);
-    @Query(value = "SELECT a FROM Articolo a WHERE (a.titolo LIKE %:keyword% OR a.contenuto LIKE %:keyword%) AND a.approvato = true")
-    List<Articolo> findByContenutoOrTitolo(@Param(value = "keyword") String keyword);
+    @Query(value = "SELECT a FROM Articolo a WHERE ((a.titolo LIKE %:parola% OR a.contenuto LIKE %:parola%) AND a.approvato = true)")
+    List<Articolo> findByContenutoOrTitolo(@Param(value = "parola") String keyword);
 }

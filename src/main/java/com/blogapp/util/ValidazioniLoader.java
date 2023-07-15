@@ -18,9 +18,10 @@ public class ValidazioniLoader {
         if(validazioneRepository.count() == 0) {
             Validazione validazione1 = new Validazione("titolo", 1, Integer.MAX_VALUE);
             Validazione validazione2 = new Validazione("contenuto", 1, Integer.MAX_VALUE);
-            Validazione validazione3 = new Validazione("password", 1, Integer.MAX_VALUE);
+            Validazione validazione3 = new Validazione("password", 8, Integer.MAX_VALUE);
             validazione3.setMaiuscole(false);
             validazione3.setCaratteriSpeciali(false);
+            validazione3.setRegexPass(String.format("[a-z0-9]{%d,%d}", validazione3.getMinimo(), validazione3.getMassimo()));
             validazioneRepository.saveAll(List.of(validazione1, validazione2, validazione3));
         }
     }
