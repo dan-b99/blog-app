@@ -29,7 +29,7 @@ public class Voto {
     @JoinColumn(name = "articolo_id")
     @ManyToOne
     private Articolo articolo;
-    @Column(unique = true)
+    @Column(nullable = false)
     private Boolean voto;
 
     public Voto(Utente utente, Articolo articolo, Boolean voto) {

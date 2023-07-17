@@ -170,6 +170,27 @@ public class ArticoloServiceImpl implements ArticoloService {
     }
 
     @Override
+    public List<VisualizzaArticoloDTO> getAllOrderedByVotesDesc() {
+        return articoloRepository.getAllOrderByVotesDesc().stream()
+                .map(art -> modelMapper.map(art, VisualizzaArticoloDTO.class))
+                .toList();
+    }
+
+    @Override
+    public List<VisualizzaArticoloDTO> getAllOrderedByVotesAsc() {
+        return articoloRepository.getAllOrderByVotesAsc().stream()
+                .map(art -> modelMapper.map(art, VisualizzaArticoloDTO.class))
+                .toList();
+    }
+
+    @Override
+    public List<VisualizzaArticoloDTO> getAllOrderedByLikes() {
+        return articoloRepository.getAllOrderedByLikes().stream()
+                .map(art -> modelMapper.map(art, VisualizzaArticoloDTO.class))
+                .toList();
+    }
+
+    @Override
     public void addComment(AggiuntaCommentoDTO comment) {
         if(articoloRepository.findById(comment.getArticolo()).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID articolo errato");

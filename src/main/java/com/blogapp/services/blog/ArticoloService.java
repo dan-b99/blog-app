@@ -17,6 +17,9 @@ public interface ArticoloService {
     List<VisualizzaArticoloDTO> byContenutoOrTitolo(String keyword);
     void setValidazioniArticolo(ValidazioneDinamicaBlogDTO validazioneDinamicaBlogDTO);
     void setVote(AggiuntaVotoDTO voto);
+    List<VisualizzaArticoloDTO> getAllOrderedByVotesDesc();
+    List<VisualizzaArticoloDTO> getAllOrderedByVotesAsc();
+    List<VisualizzaArticoloDTO> getAllOrderedByLikes();
     void addComment(AggiuntaCommentoDTO comment);
     void addReply(AggiuntaRispostaDTO reply);
 }

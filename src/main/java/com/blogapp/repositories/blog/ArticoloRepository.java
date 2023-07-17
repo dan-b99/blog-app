@@ -22,4 +22,28 @@ public interface ArticoloRepository extends JpaRepository<Articolo, Long> {
     List<Articolo> findByTags(@Param(value = "insTags") String... tags);
     @Query(value = "SELECT a FROM Articolo a WHERE ((a.titolo LIKE %:parola% OR a.contenuto LIKE %:parola%) AND a.approvato = true)")
     List<Articolo> findByContenutoOrTitolo(@Param(value = "parola") String keyword);
+    @Query(value = """
+            SELECT a, COUNT(v.id) AS conta
+            FROM Articolo a
+            LEFT JOIN a.voti v
+            GROUP BY a
+            ORDER BY conta DESC
+            """)
+    List<Articolo> getAllOrderByVotesDesc();
+    @Query(value = """
+            SELECT a, COUNT(v.id) AS conta
+            FROM Articolo a
+            LEFT JOIN a.voti v
+            GROUP BY a
+            ORDER BY conta ASC
+            """)
+    List<Articolo> getAllOrderByVotesAsc();
+    @Query(value = """
+            SELECT a, SUM(CASE WHEN v.voto = true THEN 1 ELSE 0 END) AS likes
+            FROM Articolo a
+            LEFT JOIN a.voti v
+            GROUP BY a
+            ORDER BY likes DESC
+            """)
+    List<Articolo> getAllOrderedByLikes();
 }

@@ -68,6 +68,18 @@ public class ArticoloController {
         articoloService.setVote(voto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @GetMapping("/all-by-votes-desc")
+    public ResponseEntity<List<VisualizzaArticoloDTO>> getAllByVotesDesc() {
+        return new ResponseEntity<>(articoloService.getAllOrderedByVotesDesc(), HttpStatus.OK);
+    }
+    @GetMapping("/all-by-votes-asc")
+    public ResponseEntity<List<VisualizzaArticoloDTO>> getAllByVotesAsc() {
+        return new ResponseEntity<>(articoloService.getAllOrderedByVotesAsc(), HttpStatus.OK);
+    }
+    @GetMapping("/all-by-likes")
+    public ResponseEntity<List<VisualizzaArticoloDTO>> getAllByLikes() {
+        return new ResponseEntity<>(articoloService.getAllOrderedByLikes(), HttpStatus.OK);
+    }
     @PostMapping("/add-comment")
     public ResponseEntity<Void> addComment(@RequestBody AggiuntaCommentoDTO commento) {
         articoloService.addComment(commento);
