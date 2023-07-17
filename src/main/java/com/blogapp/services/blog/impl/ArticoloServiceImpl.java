@@ -224,13 +224,14 @@ public class ArticoloServiceImpl implements ArticoloService {
         Utente autore = utenteRepository.findById(reply.getAutore()).get();
         Articolo articolo = articoloRepository.findById(reply.getArticolo()).get();
         Commento commentoPadre = commentoRepository.findById(reply.getPadre()).get();
+        int idxPadre = articolo.getCommenti().indexOf(commentoPadre);
         Commento risposta = modelMapper.map(reply, Commento.class);
         risposta.setAutore(autore);
         risposta.setArticolo(articolo);
         risposta.setPadre(commentoPadre);
         autore.getCommenti().add(risposta);
         commentoPadre.getRisposte().add(risposta);
-        articolo.getCommenti().add(commentoPadre);
+        articolo.getCommenti().set(idxPadre, commentoPadre);
         commentoRepository.save(risposta);
         commentoRepository.save(commentoPadre);
         utenteRepository.save(autore);
