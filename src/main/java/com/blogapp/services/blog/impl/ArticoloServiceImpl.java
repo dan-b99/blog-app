@@ -1,7 +1,6 @@
 package com.blogapp.services.blog.impl;
 
 import com.blogapp.dtos.blog.*;
-import com.blogapp.entities.auth.Utente;
 import com.blogapp.entities.blog.*;
 import com.blogapp.repositories.auth.UtenteRepository;
 import com.blogapp.repositories.blog.*;
@@ -23,7 +22,6 @@ public class ArticoloServiceImpl implements ArticoloService {
     private final CategoriaRepository categoriaRepository;
     private final VotoRepository votoRepository;
     private final UtenteRepository utenteRepository;
-    private final CommentoRepository commentoRepository;
     private final ValidazioneRepository validazioneRepository;
     private final ModelMapper modelMapper;
     private String regex = "<[^>]*>";
@@ -188,53 +186,5 @@ public class ArticoloServiceImpl implements ArticoloService {
         return articoloRepository.getAllOrderedByLikes().stream()
                 .map(art -> modelMapper.map(art, VisualizzaArticoloDTO.class))
                 .toList();
-    }
-
-    @Override
-    public void addComment(AggiuntaCommentoDTO comment) {
-        if(articoloRepository.findById(comment.getArticolo()).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID articolo errato");
-        }
-        if((utenteRepository.findById(comment.getAutore()).isEmpty())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID utente errato");
-        }
-        Articolo articolo = articoloRepository.findById(comment.getArticolo()).get();
-        Utente utente = utenteRepository.findById(comment.getAutore()).get();
-        Commento commentoDaAggiungere = modelMapper.map(comment, Commento.class);
-        commentoDaAggiungere.setArticolo(articolo);
-        commentoDaAggiungere.setAutore(utente);
-        articolo.getCommenti().add(commentoDaAggiungere);
-        utente.getCommenti().add(commentoDaAggiungere);
-        commentoRepository.save(commentoDaAggiungere);
-        utenteRepository.save(utente);
-        articoloRepository.save(articolo);
-    }
-
-    @Override
-    public void addReply(AggiuntaRispostaDTO reply) {
-        if(utenteRepository.findById(reply.getAutore()).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente inesistente");
-        }
-        if(articoloRepository.findById(reply.getArticolo()).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo inesistente");
-        }
-        if(commentoRepository.findById(reply.getPadre()).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Commento padre inesistente");
-        }
-        Utente autore = utenteRepository.findById(reply.getAutore()).get();
-        Articolo articolo = articoloRepository.findById(reply.getArticolo()).get();
-        Commento commentoPadre = commentoRepository.findById(reply.getPadre()).get();
-        int idxPadre = articolo.getCommenti().indexOf(commentoPadre);
-        Commento risposta = modelMapper.map(reply, Commento.class);
-        risposta.setAutore(autore);
-        risposta.setArticolo(articolo);
-        risposta.setPadre(commentoPadre);
-        autore.getCommenti().add(risposta);
-        commentoPadre.getRisposte().add(risposta);
-        articolo.getCommenti().set(idxPadre, commentoPadre);
-        commentoRepository.save(risposta);
-        commentoRepository.save(commentoPadre);
-        utenteRepository.save(autore);
-        articoloRepository.save(articolo);
     }
 }

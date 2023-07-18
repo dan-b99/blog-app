@@ -20,6 +20,4 @@ public interface ArticoloService {
     List<VisualizzaArticoloDTO> getAllOrderedByVotesDesc();
     List<VisualizzaArticoloDTO> getAllOrderedByVotesAsc();
     List<VisualizzaArticoloDTO> getAllOrderedByLikes();
-    void addComment(AggiuntaCommentoDTO comment);
-    void addReply(AggiuntaRispostaDTO reply);
 }

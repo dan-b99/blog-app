@@ -80,14 +80,4 @@ public class ArticoloController {
     public ResponseEntity<List<VisualizzaArticoloDTO>> getAllByLikes() {
         return new ResponseEntity<>(articoloService.getAllOrderedByLikes(), HttpStatus.OK);
     }
-    @PostMapping("/add-comment")
-    public ResponseEntity<Void> addComment(@RequestBody AggiuntaCommentoDTO commento) {
-        articoloService.addComment(commento);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-    @PostMapping("/add-reply")
-    public ResponseEntity<Void> addReply(@RequestBody AggiuntaRispostaDTO reply) {
-        articoloService.addReply(reply);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

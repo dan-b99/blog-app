@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +21,5 @@ public class VisualizzaArticoloDTO {
     private Set<VisualizzaTagDTO> tags = new HashSet<>();
     private UtenteOutputDTO utente;
     private Set<VisualizzaCategoriaDTO> categorie;
-    private List<VisualizzaCommentoDTO> commenti = new ArrayList<>();
     private List<VisualizzaVotoDTO> voti;
 }
