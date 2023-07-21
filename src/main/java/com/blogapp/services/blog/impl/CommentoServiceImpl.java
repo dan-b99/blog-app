@@ -87,18 +87,6 @@ public class CommentoServiceImpl implements CommentoService {
         articoloRepository.save(articolo);
     }
 
-    //TUTTE le risposte ai commenti padre dell'articolo
-//    @Override
-//    public List<VisualizzaRispostaDTO> getRepliesByArtId(Long id) {
-//        if(articoloRepository.findById(id).isPresent()) {
-//            return commentoRepository.repliesByArticleId(id).stream()
-//                    .map(comm -> modelMapper.map(comm, VisualizzaRispostaDTO.class))
-//                    .toList();
-//        }
-//        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non trovato");
-//    }
-
-    //Risposte al commento passato come parametro
     @Override
     public List<VisualizzaRispostaDTO> getRepliesByArtIdAndCommId(Long artId, Long commId) {
         if(articoloRepository.findById(artId).isEmpty()) {
@@ -107,16 +95,15 @@ public class CommentoServiceImpl implements CommentoService {
         if(commentoRepository.findById(commId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Commento non trovato");
         }
-        List<Commento> risposteAlPrimoPadre = commentoRepository.repliesByArticoloAndId(artId, commId);
-        List<Commento> risposteArisposte = new ArrayList<>();
-        if(!risposteAlPrimoPadre.isEmpty()) {
-            for(Commento risp : risposteAlPrimoPadre) {
-                risposteArisposte.addAll(commentoRepository.repliesByArticoloAndId(artId, risp.getId()));
+        List<Commento> replies = commentoRepository.repliesByArticoloAndId(artId, commId);
+        if(!replies.isEmpty()) {
+            int idx = 0;
+            Long currentId = commId;
+            while(!commentoRepository.repliesByArticoloAndId(artId, currentId).isEmpty()) {
+                currentId = replies.get(idx++).getId();
+                replies.addAll(commentoRepository.repliesByArticoloAndId(artId, currentId));
             }
         }
-        List<Commento> risultatoFinale = new ArrayList<>();
-        risultatoFinale.addAll(risposteAlPrimoPadre);
-        risultatoFinale.addAll(risposteArisposte);
-        return risultatoFinale.stream().map(risps -> modelMapper.map(risps, VisualizzaRispostaDTO.class)).toList();
+        return replies.stream().map(risps -> modelMapper.map(risps, VisualizzaRispostaDTO.class)).toList();
     }
 }

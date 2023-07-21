@@ -11,6 +11,5 @@ public interface CommentoService {
     void addComment(AggiuntaCommentoDTO comment);
     List<VisualizzaCommentoDTO> getCommentsByArtId(Long id);
     void addReply(AggiuntaRispostaDTO reply);
-    //List<VisualizzaRispostaDTO> getRepliesByArtId(Long id);
     List<VisualizzaRispostaDTO> getRepliesByArtIdAndCommId(Long artId, Long commId);
 }
