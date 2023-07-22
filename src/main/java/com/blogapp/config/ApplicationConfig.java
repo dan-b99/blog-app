@@ -45,6 +45,7 @@ public class ApplicationConfig {
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
            requestMatcherRegistry.requestMatchers("/users/all").hasRole("ADMIN");
            requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/users/**").authenticated();
+           requestMatcherRegistry.requestMatchers(HttpMethod.PATCH, "/users/update-password/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.PUT, "/users/**").hasRole("ADMIN");
            requestMatcherRegistry.requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN");
            requestMatcherRegistry.requestMatchers("/articles/not-approved/**").hasRole("ADMIN");

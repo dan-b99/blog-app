@@ -10,6 +10,7 @@ public interface UtenteService {
     Set<UtenteOutputDTO> getAll();
     Set<RuoloOutputDTO> userRoles();
     void setValidazionePassword(ValidazioneDinamicaPasswordDTO validazioniPassword);
+    UtenteOutputDTO updatePassword(Long utenteId, String newPassword);
     void setBlock(Long id);
     void deleteUser(Long id);
 }

@@ -66,11 +66,9 @@ public class UtenteServiceImpl implements UtenteService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sei stato bloccato");
         }
         Validazione validazionePass = validazioneRepository.findByCampo("password").get();
-        if(!loginDTO.getPassword().matches(validazionePass.getRegexPass())) {
-
-        }
         try {
             UtenteOutputDTO utenteOutput = modelMapper.map(utente, UtenteOutputDTO.class);
+            utenteOutput.setRegexMatch(loginDTO.getPassword().matches(validazionePass.getRegexPass()));
             Map<String, String> claimsPrivati = Map.of("user", objectMapper.writeValueAsString(utenteOutput));
             return new AutenticazioneDTO(jwtUtil.generate(utenteOutput.getEmail(), claimsPrivati), utenteOutput);
         } catch(Exception ex) {
@@ -129,6 +127,25 @@ public class UtenteServiceImpl implements UtenteService {
         validazione.setMaiuscole(validazioniPassword.getMaiuscole());
         validazione.setRegexPass(validazioniPassword.getRegexPass());
         validazioneRepository.save(validazione);
+    }
+
+    @Override
+    public UtenteOutputDTO updatePassword(Long utenteId, String newPassword) {
+        Utente utenteLoggato = utenteRepository.findById(utenteId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato")
+        );
+        Validazione validazionePass = validazioneRepository.findByCampo("password").get();
+        if(newPassword.equals(utenteLoggato.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La password deve essere diversa");
+        }
+        if(!newPassword.matches(validazionePass.getRegexPass())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La password non soddisfa i criteri");
+        }
+        utenteLoggato.setPassword(passwordUtil.crypt(newPassword));
+        utenteRepository.save(utenteLoggato);
+        UtenteOutputDTO output = modelMapper.map(utenteLoggato, UtenteOutputDTO.class);
+        output.setRegexMatch(true);
+        return output;
     }
 
     @Override

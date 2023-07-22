@@ -19,4 +19,5 @@ public class UtenteOutputDTO {
     private String email;
     private List<RuoloOutputDTO> ruoli;
     private boolean bloccato;
+    private boolean regexMatch;
 }

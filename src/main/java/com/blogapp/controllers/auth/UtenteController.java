@@ -36,6 +36,10 @@ public class UtenteController {
         utenteService.setValidazionePassword(validazioneDinamicaPasswordDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PatchMapping("/update-password/{id}")
+    public ResponseEntity<UtenteOutputDTO> passUpdate(@PathVariable Long id, @RequestBody String newPassword) {
+        return new ResponseEntity<>(utenteService.updatePassword(id, newPassword), HttpStatus.OK);
+    }
     @PutMapping("/set-block")
     public ResponseEntity<Void> setBlock(@RequestBody Long id) {
         utenteService.setBlock(id);
