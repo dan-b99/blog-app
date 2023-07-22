@@ -56,6 +56,7 @@ public class ApplicationConfig {
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/categories/**").hasRole("ADMIN");
            requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/comments/**").authenticated();
            requestMatcherRegistry.requestMatchers(HttpMethod.POST, "/comments/**").authenticated();
+           requestMatcherRegistry.requestMatchers(HttpMethod.GET, "/votes/**").authenticated();
         });
         httpSecurity.addFilterBefore(new Filter() {
             @Override
