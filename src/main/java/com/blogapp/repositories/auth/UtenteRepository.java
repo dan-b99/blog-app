@@ -20,4 +20,12 @@ public interface UtenteRepository extends JpaRepository<Utente, Long> {
     Set<Utente> getAllExceptAdmin();
     @Query(value = "SELECT u FROM Utente u WHERE u.iscritto = true")
     Set<Utente> getAllByIscritto();
+    @Query(value = """
+            SELECT u FROM Utente u
+            JOIN u.votazioni v
+            WHERE u.iscritto = true AND (v.articolo.id = :artId AND v.voto = true)
+            GROUP BY u
+            ORDER BY u.id ASC
+            """)
+    Set<Utente> getAllByArtLikes(@Param(value = "artId") Long id);
 }

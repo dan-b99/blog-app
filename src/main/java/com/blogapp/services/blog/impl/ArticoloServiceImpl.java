@@ -95,18 +95,21 @@ public class ArticoloServiceImpl implements ArticoloService {
             Set<Utente> utentiIscritti = utenteRepository.getAllByIscritto();
             art.setApprovato(true);
             articoloRepository.save(art);
-            try {
-                for(Utente u : utentiIscritti) {
-                    emailService.sendEmail(
-                            u.getEmail(),
-                            "Pubblicazione nuovo articolo",
-                            "Ricevi questa mail in quanto iscritto alle notifiche di IDEASharing.\n" +
-                                    "Un nuovo articolo è appena stato pubblicato: leggilo al link qui sotto!\n" +
-                                    artLink + id + "\nIl team di IDEASharing."
-                    );
+            if(!utentiIscritti.isEmpty()) {
+                try {
+                    for(Utente u : utentiIscritti) {
+                        emailService.sendEmail(
+                                u.getEmail(),
+                                "Pubblicazione nuovo articolo",
+                                "Ricevi questa mail in quanto iscritto alle notifiche di IDEASharing.\n" +
+                                        "Un nuovo articolo è appena stato pubblicato: leggilo al link qui sotto!\n" +
+                                        artLink + id + "\nIl team di IDEASharing."
+                        );
+                    }
+                } catch (MessagingException e) {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore del server");
                 }
-            } catch (MessagingException e) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore del server");
+
             }
         });
     }
