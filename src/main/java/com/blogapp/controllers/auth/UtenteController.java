@@ -50,4 +50,8 @@ public class UtenteController {
         utenteService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PatchMapping("/set-notifications")
+    public ResponseEntity<UtenteOutputDTO> setNotifications(@RequestBody Long id) {
+        return new ResponseEntity<>(utenteService.setNotifiche(id), HttpStatus.OK);
+    }
 }

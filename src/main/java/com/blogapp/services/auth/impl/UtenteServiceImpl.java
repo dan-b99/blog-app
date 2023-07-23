@@ -142,27 +142,31 @@ public class UtenteServiceImpl implements UtenteService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La password non soddisfa i criteri");
         }
         utenteLoggato.setPassword(passwordUtil.crypt(newPassword));
+        utenteLoggato.setRegexMatch(true);
         utenteRepository.save(utenteLoggato);
-        UtenteOutputDTO output = modelMapper.map(utenteLoggato, UtenteOutputDTO.class);
-        output.setRegexMatch(true);
-        return output;
+        return modelMapper.map(utenteLoggato, UtenteOutputDTO.class);
     }
 
     @Override
     public void setBlock(Long id) {
         if(utenteRepository.findById(id).isPresent()) {
             Utente utente = utenteRepository.findById(id).get();
-            if(!utente.isBloccato()) {
-                utente.setBloccato(true);
-            }
-            else {
-                utente.setBloccato(false);
-            }
+            utente.setBloccato(!utente.isBloccato());
             utenteRepository.save(utente);
         }
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato");
         }
+    }
+
+    @Override
+    public UtenteOutputDTO setNotifiche(Long id) {
+        Utente utenteLoggato = utenteRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato")
+        );
+        utenteLoggato.setIscritto(!utenteLoggato.isIscritto());
+        utenteRepository.save(utenteLoggato);
+        return modelMapper.map(utenteLoggato, UtenteOutputDTO.class);
     }
 
     @Override

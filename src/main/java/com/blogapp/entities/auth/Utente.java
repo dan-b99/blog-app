@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -15,7 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@Transactional
+@Transactional(rollbackOn = {SQLException.class, RuntimeException.class})
+@DynamicUpdate
 @Entity
 public class Utente {
     @Id
@@ -40,6 +43,8 @@ public class Utente {
     @OneToMany(mappedBy = "utente", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Voto> votazioni = new ArrayList<>();
     private boolean bloccato;
+    private boolean regexMatch;
+    private boolean iscritto;
 
     public Utente(String username, String password, Set<Ruolo> ruoli) {
         this.username = username;

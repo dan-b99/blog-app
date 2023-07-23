@@ -12,5 +12,6 @@ public interface UtenteService {
     void setValidazionePassword(ValidazioneDinamicaPasswordDTO validazioniPassword);
     UtenteOutputDTO updatePassword(Long utenteId, String newPassword);
     void setBlock(Long id);
+    UtenteOutputDTO setNotifiche(Long id);
     void deleteUser(Long id);
 }

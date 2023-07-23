@@ -1,12 +1,16 @@
 package com.blogapp.services.blog.impl;
 
 import com.blogapp.dtos.blog.*;
+import com.blogapp.entities.auth.Utente;
 import com.blogapp.entities.blog.*;
 import com.blogapp.repositories.auth.UtenteRepository;
 import com.blogapp.repositories.blog.*;
+import com.blogapp.services.EmailService;
 import com.blogapp.services.blog.ArticoloService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,9 @@ public class ArticoloServiceImpl implements ArticoloService {
     private final UtenteRepository utenteRepository;
     private final ValidazioneRepository validazioneRepository;
     private final ModelMapper modelMapper;
+    private final EmailService emailService;
+    @Value("${spring.mail.art.link}")
+    private String artLink;
     private String regex = "<[^>]*>";
 
     @Override
@@ -85,8 +92,22 @@ public class ArticoloServiceImpl implements ArticoloService {
     @Override
     public void approveArticle(Long id) {
         articoloRepository.findById(id).ifPresent(art -> {
+            Set<Utente> utentiIscritti = utenteRepository.getAllByIscritto();
             art.setApprovato(true);
             articoloRepository.save(art);
+            try {
+                for(Utente u : utentiIscritti) {
+                    emailService.sendEmail(
+                            u.getEmail(),
+                            "Pubblicazione nuovo articolo",
+                            "Ricevi questa mail in quanto iscritto alle notifiche di IDEASharing.\n" +
+                                    "Un nuovo articolo è appena stato pubblicato: leggilo al link qui sotto!\n" +
+                                    artLink + id + "\nIl team di IDEASharing."
+                    );
+                }
+            } catch (MessagingException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore del server");
+            }
         });
     }
 

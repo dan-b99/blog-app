@@ -18,4 +18,6 @@ public interface UtenteRepository extends JpaRepository<Utente, Long> {
             SELECT u From Utente u JOIN u.ruoli r GROUP BY u HAVING COUNT(r) <= 1
             """)
     Set<Utente> getAllExceptAdmin();
+    @Query(value = "SELECT u FROM Utente u WHERE u.iscritto = true")
+    Set<Utente> getAllByIscritto();
 }

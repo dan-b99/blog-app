@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.List;
 
 @Getter
@@ -20,4 +19,5 @@ public class UtenteOutputDTO {
     private List<RuoloOutputDTO> ruoli;
     private boolean bloccato;
     private boolean regexMatch;
+    private boolean iscritto;
 }
